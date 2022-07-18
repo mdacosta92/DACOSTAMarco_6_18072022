@@ -13,7 +13,7 @@ exports.likeSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then((sauceObject) => {
 
-            if (!sauceObject.usersLiked.includes(req.body.userId) && req.body.like === 1) {
+            if (!sauceObject.usersLiked.includes(req.body.userId) && !sauceObject.usersDisliked.includes(req.body.userId) && req.body.like === 1) {
 
                 Sauce.updateOne({ _id: req.params.id },
                     {
@@ -32,7 +32,8 @@ exports.likeSauce = (req, res, next) => {
                     }
                 ).then()(res.status(201).json({ message: "Annulation like" })
                 ).catch((error) => res.status(500).json({ error }));
-            } else if (!sauceObject.usersDisliked.includes(req.body.userId) && req.body.like === -1) {
+                
+            } else if (!sauceObject.usersDisliked.includes(req.body.userId) && !sauceObject.usersLiked.includes(req.body.userId) && req.body.like === -1) {
 
                 Sauce.updateOne({ _id: req.params.id },
                     {
